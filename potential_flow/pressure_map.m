@@ -27,7 +27,7 @@ contour(X,Y,Phi,20,'LineColor','red');
 hold on;
 contour(X,Y,Psi,20,'LineColor','blue');
 t = linspace(0,2*pi,100);
-patch(R*sin(t),R*cos(t),'yellow','FaceALpha',0.4);
+patch(R*sin(t),R*cos(t),'yellow','FaceAlpha',0.4);
 title('Velocity potential and stream function');
 axis equal;
 
@@ -53,7 +53,7 @@ hold on;
 
 % ??
 t = linspace(0,2*pi,100);
-patch(R*sin(t),R*cos(t),'yellow','FaceALpha',0.9);
+patch(R*sin(t),R*cos(t),'yellow','FaceAlpha',0.9);
 
 % ??????
 Un=WX./sqrt(WX.^2+WY.^2);
