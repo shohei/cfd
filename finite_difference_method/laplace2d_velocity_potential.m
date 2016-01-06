@@ -26,8 +26,8 @@ initVelocityPotential();
 % drawVelocityPotential();
 
 computeGaussSeidelMethod();
-drawVelocityPotential();
-disp 'hello'
+% drawVelocityPotential();
+% disp 'hello'
 
     function drawDuct()        
         plot([0,Xobs-WobsX/2],[0,0],'k');
@@ -199,6 +199,8 @@ disp 'hello'
     function drawVelocityPotential()
         drawDuct();
         contour(X,Y,Phi,10,'LineColor','red');
+        patch([Xobs-WobsX/2 Xobs-WobsX/2 Xobs+WobsX/2 Xobs+WobsX/2],...
+            [0 WobsY WobsY 0],'k');
         drawnow limitrate;
     end
 
