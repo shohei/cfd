@@ -16,19 +16,19 @@ delay=0.5;
 % second_order_upwind;
 % cip;
 % exact_solution;
-ylim([-10 10]);
-xlim([0 totalT]);
-hold on;
+% hold on;
 ts=0:deltaT:totalT;
 for time=ts
-    cla;
-    time
+    %     cla;
+    %     time;
     drawPulse(time);
+    ylim([-10 10]);
+    xlim([0 totalT]);    
     drawnow;
-    pause(deltaT)
+    pause(deltaT);
 end
 
-    function fx=computeFx(x)
+    function fx=computeFx(x,t)
         a = 1/delay;
         b = (1+2*delay)/delay;
         fx = a*x.*(x<delay)+...
@@ -36,14 +36,9 @@ end
             (-a*x+b).*(x>1+delay & x<1+2*delay);
     end
 
-    function y=computePulse(t)
-        y = computeFx(x-speed*t);
-    end
-
     function drawPulse(t)
-        y=computePulse(t);
+        y=computeFx(x,t);
         plot(x,y);
     end
-
 
 end
