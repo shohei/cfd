@@ -28,23 +28,24 @@ ylim([0 1.2*A]);
 % cip;
 % exact_solution;
 % hold on;
-FigHandle = figure;
-set(FigHandle, 'Position', [100, 100, 1049, 895]);
-subplot(4,1,1);
+sp1=subplot(4,1,1);
 title('1st-order upwind');
 hold on;
 
-subplot(4,1,2);
+sp2=subplot(4,1,2);
 title('2nd-order upwind');
 hold on;
 
-subplot(4,1,3);
+sp3=subplot(4,1,3);
 title('CIP method');
 hold on;
 
-subplot(4,1,4);
+sp4=subplot(4,1,4);
 title('Exact solution');
 hold on;
+
+FigHandle = gcf;
+set(FigHandle, 'Position', [100, 100, 1000, 700]);
 
 drawWave();
 
@@ -56,16 +57,16 @@ drawWave();
             falling = (-a*x+b*I).*(x>h+d & x<=2*d+h);
             fx=rising+holding+falling;
             
-            subplot(4,1,1);
+            axes(sp1);
             h1=drawOne(t,fx);
             
-            subplot(4,1,2);
+            axes(sp2);
             h2=drawTwo(t,fx);
             
-            subplot(4,1,3);
+            axes(sp3);
             h3=drawThree(t,fx);
             
-            subplot(4,1,4);
+            axes(sp4);
             h4=drawFour(t,fx);
 
             drawnow;
