@@ -9,36 +9,97 @@ partition=101;
 pulseWidth=1;
 speed=1;
 thinningN=1;
-global x; x=linspace(0,1,partition);
-totalT=5;
-delay=0.5;
+
+xmax=10;
+xx=linspace(0,xmax,101)';
+
+global d; global h;
+d=0.4; h=1.2;
+global A; A=1;
+a=A/d;
+b=A*(2*d+h)/d;
+I=ones(size(xx,1),1);
+u=2;
+
 % first_order_upwind;
 % second_order_upwind;
 % cip;
 % exact_solution;
 % hold on;
-ts=0:deltaT:totalT;
-for time=ts
-    %     cla;
-    %     time;
-    drawPulse(time);
-    ylim([-10 10]);
-    xlim([0 totalT]);    
-    drawnow;
-    pause(deltaT);
-end
+drawWave();
 
-    function fx=computeFx(x,t)
-        a = 1/delay;
-        b = (1+2*delay)/delay;
-        fx = a*x.*(x<delay)+...
-            1*(x>delay & x<1+delay)+...
-            (-a*x+b).*(x>1+delay & x<1+2*delay);
+    function drawWave()
+        for t=0:0.1:4
+            x=xx-u*t;
+            rising =a*x.*(x>=0 & x<d);
+            holding = A*I.*(x>=d & x<=h+d);
+            falling = (-a*x+b*I).*(x>h+d & x<=2*d+h);
+            fx=rising+holding+falling;
+
+            subplot(4,1,1);
+            title('1st-order upwind');
+            hold on;
+            h1=drawOne(t,fx);
+            
+            subplot(4,1,2);
+            title('2nd-order upwind');
+            hold on;
+            h2=drawTwo(t,fx);
+
+            subplot(4,1,3);
+            title('CIP method');
+            hold on;
+            h3=drawThree(t,fx);
+            
+            subplot(4,1,4);
+            title('Exact solution');
+            hold on;
+            h4=drawFour(t,fx);
+            
+%             pause(0.02);
+            
+            if ((t==0)||(t==1)||(t==2)||(t==3)||(t==4))
+                set(h1,'Visible','on');
+                set(h2,'Visible','on');
+                set(h3,'Visible','on');
+                set(h4,'Visible','on');
+                
+            else
+                set(h1,'Visible','off');
+                set(h2,'Visible','off');
+                set(h3,'Visible','off');
+                set(h4,'Visible','off');
+            end
+            
+        end
     end
 
-    function drawPulse(t)
-        y=computeFx(x,t);
-        plot(x,y);
+    function h1=drawOne(t,fx)
+        h1=plot(xx,fx,'b-');
+        xlim([0 xmax]);
+        ylim([0 1.2*A]);
+        drawnow;
+    end
+
+    function h2=drawTwo(t,fx)
+        h2=plot(xx,fx,'b-');
+        xlim([0 xmax]);
+        ylim([0 1.2*A]);
+        drawnow;
+    end
+
+    function h3=drawThree(t,fx)
+        h3=plot(xx,fx,'b-');
+        xlim([0 xmax]);
+        ylim([0 1.2*A]);
+        drawnow;
+    end
+
+    function h4=drawFour(t,fx)
+        h4=plot(xx,fx,'b-');
+        xlim([0 xmax]);
+        ylim([0 1.2*A]);
+        drawnow;
     end
 
 end
