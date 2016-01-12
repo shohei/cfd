@@ -32,7 +32,10 @@ sp4=subplot(2,2,4);
 title('Implicit / Neumann');
 hold on;
 
+writerObj = VideoWriter('newfile.avi');
+open(writerObj);
 drawAll();
+close(writerObj);
 
     function drawAll()
         for t=0:deltaT:tmax
@@ -45,6 +48,9 @@ drawAll();
             axes(sp4);
             h4=drawFour(t);
             drawnow;
+            frame = getframe(gcf);
+            writeVideo(writerObj, frame);
+
             if (t==0)||(t==1)||(t==2)||(t==3)||(t==4)
                 set(h1,'Visible','on');
                 set(h2,'Visible','on');
