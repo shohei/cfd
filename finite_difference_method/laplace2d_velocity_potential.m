@@ -22,14 +22,14 @@ y = 0:deltaY:W;
 [X,Y] = meshgrid(x,y);
 Phi = U*X+0*Y;
 
-writerObj = VideoWriter('velocity_potential.avi');
-open(writerObj);
+% writerObj = VideoWriter('velocity_potential.avi');
+% open(writerObj);
 
 initVelocityPotential();
 % drawVelocityPotential();
 
 computeGaussSeidelMethod();
-close(writerObj);
+% close(writerObj);
 
     function drawDuct()        
         plot([0,Xobs-WobsX/2],[0,0],'k');
@@ -204,8 +204,8 @@ close(writerObj);
         patch([Xobs-WobsX/2 Xobs-WobsX/2 Xobs+WobsX/2 Xobs+WobsX/2],...
             [0 WobsY WobsY 0],'k');
         drawnow limitrate;
-        frame = getframe(gcf);
-        writeVideo(writerObj, frame);
+%         frame = getframe(gcf);
+%         writeVideo(writerObj, frame);
 
     end
 
