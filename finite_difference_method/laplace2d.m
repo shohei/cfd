@@ -17,10 +17,14 @@ Psi = zeros(size(X));
 U = 1.0;
 iteration=5000;
 tolerance=0.000001;
+% tolerance=0.01;
+
+% writerObj = VideoWriter('stream_function.avi');
+% open(writerObj);
 
 initStreamFunction();
 computeGaussSeidelMethod();
-contour(X,Y,Psi,'LineColor','blue');
+% close(writerObj);
 
     function initStreamFunction()
         for xidx=1:size(X,2)
@@ -35,9 +39,9 @@ contour(X,Y,Psi,'LineColor','blue');
     end
 
     function computeGaussSeidelMethod()
-        maxError=0.0;
         cnt=0;
         while(cnt<iteration)
+            maxError=0.0;
             for xidx=2:size(X,2)-1
                 for yidx=2:size(Y,1)-1
                     if(X(yidx,xidx) > Xobs-WobsX/2 && X(yidx,xidx) < Xobs+WobsX/2 && Y(yidx,xidx) < WobsY)
@@ -55,7 +59,15 @@ contour(X,Y,Psi,'LineColor','blue');
                     end
                 end
             end
-            
+            contour(X,Y,Psi,'LineColor','blue');
+            str = sprintf('Error: %.10f',maxError);
+            str2 = sprintf('Break while less than %.7f',tolerance);            
+            text(1.5,1.05,str);
+            text(1.5,1.02,str2);
+            drawnow;
+%             frame = getframe(gcf);
+%             writeVideo(writerObj, frame);
+
             if(maxError<tolerance)
                 break;
             end
