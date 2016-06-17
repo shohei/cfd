@@ -1,4 +1,4 @@
-function velocity_const
+function one_dimensional
 
 clear all;
 close all;
