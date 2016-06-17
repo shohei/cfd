@@ -40,8 +40,8 @@ axis equal;
 % view(az, el);
 colormap(hot);
 
-writerObj = VideoWriter('newfile.avi');
-open(writerObj);
+% writerObj = VideoWriter('newfile.avi');
+% open(writerObj);
 
 f_next=f;
 for t=1:30
@@ -62,14 +62,14 @@ for t=1:30
         drawnow;
         zlim([0 Amp*1.2]);
 
-        frame = getframe(gcf);
-        writeVideo(writerObj, frame);
+%         frame = getframe(gcf);
+%         writeVideo(writerObj, frame);
 
     end
     fprintf('t=%d \n',t);    
 end
 
-close(writerObj);
+% close(writerObj);
 
 
 end
