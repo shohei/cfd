@@ -1,4 +1,4 @@
-function one_dimensional
+function velocity_const
 
 clear all;
 close all;
@@ -123,7 +123,6 @@ for step = 1:300
     %     surf(X,Y,F); %this swaps X and Y axes.
     % Somehow, matrix definition and axis direction swaps. sad though.
     surf(Y,X,F);
-    f = F;
     title('time evoluted f');
     if(VIEWTOP)
       view(2)   
@@ -137,6 +136,9 @@ for step = 1:300
         frame = getframe(gcf);
         writeVideo(writerObj, frame);
     end
+    
+    f = F;
+    [g,h] = gradient(f);    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
