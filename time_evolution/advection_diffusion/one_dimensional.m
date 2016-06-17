@@ -2,6 +2,12 @@ function one_dimensional
 
 clear all;
 close all;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+CAPTURE = true;
+VIEWTOP = false;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %condition
 deltaT = 0.1;
 D=0.05;
@@ -19,7 +25,13 @@ dy=diffy(1);
 % dix=D*deltaT/(dx)^2
 % diy=D*deltaT/(dy)^2
 
-%first
+if(CAPTURE)
+    writerObj = VideoWriter('newfile.avi');
+    open(writerObj);
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%firstly, compute with CIP method
 gain = 1;
 f = gain*(-X.^2+ -Y.^2);
 fmin = min(f(:));
@@ -27,20 +39,13 @@ foffset = -1 * fmin;
 f = f + foffset*ones(size(f));
 [g,h] = gradient(f);
 
-% u = 2*X.*(X>0) + (-2*X) + (X<0);
-% uconst = 2;
 uconst = 0.2;
 u = uconst*ones(size(X));
-% umin = min(u(:));
-% uoffset = -1 * umin;
-% u = u + uoffset*ones(size(u));
 
-% vconst = 0.01;
-% v = vconst*Y;
-% vmin = min(v(:));
-% voffset = -1 * vmin;
-% v = v + voffset*ones(size(v));
-v = 0*Y;
+% v = 0*Y;
+vconst = 0.2;
+v = vconst*ones(size(Y));
+
 vcomp = u+v;
 
 %check CFL condition
@@ -56,25 +61,31 @@ set(FigHandle, 'Position', [100, 100, 1200, 400]);
 
 ax1 = subplot(131);
 axis equal;
-surf(X,Y,f);
+surf(Y,X,f);
 rotate3d on;
 title('Initial f');
-view(2)
+if(VIEWTOP)
+  view(2)   
+end
 colormap(ax1,hot);
 
 ax2 = subplot(132);
 axis equal;
 colormap(ax2,spring);
-surf(X,Y,vcomp);
+surf(Y,X,vcomp);
 rotate3d on;
 title('velocity');
-view(2)
+if(VIEWTOP)
+  view(2)   
+end
 
 ax3 = subplot(133);
 axis equal;
 title('elapsed f');
 rotate3d on;
-view(2)
+if(VIEWTOP)
+  view(2)   
+end
 colormap(ax3,hot);
 
 for step = 1:300
@@ -91,7 +102,7 @@ for step = 1:300
             
             c12(i,j) = (-a(i,j)-b(i,j)*dy)/(dx*dy^2);
             c21(i,j) = (-a(i,j)-(g(i,j-1)-g(i,j))*dx)/(dx^2*dy);
-
+            
             c11(i,j) = (-b(i,j) + c21(i,j)*dx^2)/dx;
             
             c10(i,j) = g(i,j);
@@ -99,36 +110,48 @@ for step = 1:300
             c01(i,j) = h(i,j);
             
             c00(i,j) = f(i,j);
-                                   
+            
             gzai = -u(i,j)*(deltaT);
             eta = -v(i,j)*(deltaT);
-
+            
             F(i,j) = ...
-        ((c30(i,j)*gzai + c21(i,j)*eta + c20(i,j))*gzai + c11(i,j)*eta + c10(i,j))*gzai +...
-        ((c03(i,j)*eta + c12(i,j)*gzai + c02(i,j))*eta + c01(i,j))*eta +...
+                ((c30(i,j)*gzai + c21(i,j)*eta + c20(i,j))*gzai + c11(i,j)*eta + c10(i,j))*gzai +...
+                ((c03(i,j)*eta + c12(i,j)*gzai + c02(i,j))*eta + c01(i,j))*eta +...
                 c00(i,j);
         end
-    end    
-    surf(X,Y,F);
+    end
+    %     surf(X,Y,F); %this swaps X and Y axes.
+    % Somehow, matrix definition and axis direction swaps. sad though.
+    surf(Y,X,F);
     f = F;
     title('time evoluted f');
-    view(2)
-    msg = sprintf('t=%d \n',step);    
+    if(VIEWTOP)
+      view(2)   
+    end
+    msg = sprintf('t=%d \n',step);
     text(xmax,ymax,msg);
     colormap(hot);
     drawnow;
+    
+    if(CAPTURE)
+        frame = getframe(gcf);
+        writeVideo(writerObj, frame);
+    end
 end
 
-
-%second
-
-
-
-
-%last
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%secondly, compute with ...
 
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%finally, ....
+
+
+
+if(CAPTURE)
+    close(writerObj);
+end
 
 end
