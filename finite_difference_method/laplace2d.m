@@ -3,6 +3,9 @@ function laplace2d
 clear all;
 close all;
 
+%% define capture
+CAPTURE = false;
+
 Xobs = 0.8;
 WobsX = 0.4;
 WobsY = 0.5;
@@ -19,12 +22,17 @@ iteration=5000;
 tolerance=0.000001;
 % tolerance=0.01;
 
-% writerObj = VideoWriter('stream_function.avi');
-% open(writerObj);
+if(CAPTURE)
+  writerObj = VideoWriter('stream_function.avi');
+  open(writerObj);
+end
 
 initStreamFunction();
 computeGaussSeidelMethod();
-% close(writerObj);
+
+if(CAPTURE)
+  close(writerObj);
+end
 
     function initStreamFunction()
         for xidx=1:size(X,2)
@@ -65,9 +73,10 @@ computeGaussSeidelMethod();
             text(1.5,1.05,str);
             text(1.5,1.02,str2);
             drawnow;
-%             frame = getframe(gcf);
-%             writeVideo(writerObj, frame);
-
+            if(CAPTURE)
+                frame = getframe(gcf);
+                writeVideo(writerObj, frame);
+            end
             if(maxError<tolerance)
                 break;
             end

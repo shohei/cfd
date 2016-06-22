@@ -1,6 +1,10 @@
 function laplace2d_velocity_potential
 clear all; close all;
 format shortG;
+
+%%define capture
+CAPTURE = true;
+
 global L;global U;global W;global Xobs;global WobsX;global WobsY;
 L = 2.0;
 U = 1.0;
@@ -22,16 +26,20 @@ y = 0:deltaY:W;
 [X,Y] = meshgrid(x,y);
 Phi = U*X+0*Y;
 
-% writerObj = VideoWriter('velocity_potential.avi');
-% open(writerObj);
+if(CAPTURE)
+    writerObj = VideoWriter('velocity_potential.avi');
+    open(writerObj);
+end
 
 initVelocityPotential();
 % drawVelocityPotential();
 
 computeGaussSeidelMethod();
-% close(writerObj);
 
-    function drawDuct()        
+if(CAPTURE)
+    close(writerObj);
+end
+    function drawDuct()
         plot([0,Xobs-WobsX/2],[0,0],'k');
         plot([Xobs-WobsX/2,Xobs-WobsX/2],[0,WobsY],'k');
         plot([Xobs-WobsX/2,Xobs+WobsX/2],[WobsY,WobsY],'k');
@@ -74,8 +82,8 @@ computeGaussSeidelMethod();
 
     function computeGaussSeidelMethod()
         cnt=0;
-%         xmax=L/deltaX+1;
-%         ymax=W/deltaY+1;
+        %         xmax=L/deltaX+1;
+        %         ymax=W/deltaY+1;
         
         while(cnt<iteration)
             maxError=0.0;
@@ -204,9 +212,10 @@ computeGaussSeidelMethod();
         patch([Xobs-WobsX/2 Xobs-WobsX/2 Xobs+WobsX/2 Xobs+WobsX/2],...
             [0 WobsY WobsY 0],'k');
         drawnow limitrate;
-%         frame = getframe(gcf);
-%         writeVideo(writerObj, frame);
-
+        if(CAPTURE)
+            frame = getframe(gcf);
+            writeVideo(writerObj, frame);
+        end
     end
 
 end

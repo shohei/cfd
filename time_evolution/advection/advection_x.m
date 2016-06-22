@@ -3,6 +3,10 @@ function advection_x
 clear all;
 close all;
 format shortG;
+
+%%define capture
+CAPTURE = false;
+
 partition=101;
 xmax=20;
 xx=linspace(0,xmax,partition)';
@@ -53,11 +57,14 @@ set(FigHandle, 'Position', [100, 100, 1000, 700]);
 global fx_init;
 fx_init=computeFxInit();
 
-% writerObj = VideoWriter('newfile.avi');
-% open(writerObj);
+if(CAPTURE)
+    writerObj = VideoWriter('newfile.avi');
+    open(writerObj);
+end
 drawWave();
-% close(writerObj);
-
+if(CAPTURE)
+    close(writerObj);
+end
     function drawWave()
         for t=0:deltaT:4
             
@@ -74,9 +81,10 @@ drawWave();
             h4=drawExact(t);
             
             drawnow;
-%             frame = getframe(gcf);
-%             writeVideo(writerObj, frame);
-            
+            if(CAPTURE)
+                frame = getframe(gcf);
+                writeVideo(writerObj, frame);
+            end
             if ((t==0)||(t==1)||(t==2)||(t==3)||(t==4))
                 set(h1,'Visible','on');
                 set(h2,'Visible','on');
@@ -129,7 +137,7 @@ drawWave();
         if t==0
             f=fx_init;
             fdash=diff(f)/dx;
-            g=vertcat(0,fdash);            
+            g=vertcat(0,fdash);
             f_next = zeros(size(f));
             g_next = zeros(size(g));
         else
@@ -139,17 +147,17 @@ drawWave();
             c3=g(1)/dx^2-2*(f(1))/dx^3;
             f_next(1) = F(c0,c1,c2,c3,-u*deltaT);
             g_next(1) = G(c1,c2,c3,-u*deltaT);
-                        
+            
             for idx=2:partition
-              c0=f(idx);
-              c1=g(idx);
-              c2=3*(f(idx-1)-f(idx))/dx^2+(2*g(idx)+g(idx-1))/dx;
-              c3=(g(idx)+g(idx-1))/dx^2-2*(f(idx)-f(idx-1))/dx^3;
-              f_next(idx) = F(c0,c1,c2,c3,-u*deltaT);
-              g_next(idx) = G(c1,c2,c3,-u*deltaT);           
+                c0=f(idx);
+                c1=g(idx);
+                c2=3*(f(idx-1)-f(idx))/dx^2+(2*g(idx)+g(idx-1))/dx;
+                c3=(g(idx)+g(idx-1))/dx^2-2*(f(idx)-f(idx-1))/dx^3;
+                f_next(idx) = F(c0,c1,c2,c3,-u*deltaT);
+                g_next(idx) = G(c1,c2,c3,-u*deltaT);
             end
             f=f_next;
-            g=g_next;          
+            g=g_next;
         end
         
         h3=plot(xx,f,'b-');
