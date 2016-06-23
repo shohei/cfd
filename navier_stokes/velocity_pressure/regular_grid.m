@@ -60,26 +60,66 @@ drawCavity();
 
 
 %% initial condition
-u = 0*X;
-v = 0*X;
-for yi=1:size(Y,1)
-    for xi=1:size(X,2)
-        if(X(xi,yi) > Xobs-WobsX/2 && X(xi,yi) < Xobs+WobsX/2 && Y(xi,yi) < WobsY)
-            continue;
-        else
-            u(xi,yi) = U*xi;
-            v(xi,yi) = U*yi;
+initCondition();
+    function initCondition()
+        u = 0*X;
+        v = 0*Y;
+        U = 1;
+        V = 0;
+        for yi=1:size(Y,1)
+            for xi=1:size(X,2)
+                if(X(yi,xi) < Xcav-WcavX/2 && Y(yi,xi) < WcavY)
+                    continue;
+                elseif(X(yi,xi) > Xcav+WcavX/2 && Y(yi,xi) < WcavY)
+                    continue;
+                else
+                    u(yi,xi) = U*xi;
+                    v(yi,xi) = V*yi;
+                end
+            end
         end
+        surf(X,Y,u);
+        rotate3d on;
     end
-end
-
-% u = 2*X;
-% v = 2*Y;
-% 
-% surf(X,Y,u);
-
-
+        
+return;
 % checkCFLcondition();
+
+        function updateBoundaryCondition()
+            for yi=1:size(Y,1)
+                for xi=1:size(X,2)
+                    if(X(yi,xi) < Xcav-WcavX/2 && Y(yi,xi) < WcavY)
+                        continue;
+                    elseif(X(yi,xi) > Xcav+WcavX/2 && Y(yi,xi) < WcavY)
+                        continue;
+                    else
+                        % orthogonal velocity is zero
+                        v(1,xi)=0;
+                        u(yi,xi)=0;
+                        v(end-1,xi) = 0;
+                        u(yi,end-1) = 0;                                                
+                        % wall-side velocity parallel to wall
+                        u(i,0) = -u();
+                        v() = -v();
+                        u = -u();
+                        v = -v();
+                        % velocity neighbor to wall satisfies average velocity
+                                                 
+                        % wall-side velocity orthogonal to wall
+                        
+                        % low-side pressure
+                        
+                        % upper-side pressure
+                        
+                        % left-side pressure
+                        
+                        % right-side pressure
+                        
+                    end
+                end
+            end
+        end
+
 
 %% main routine
 for time=1:100    
